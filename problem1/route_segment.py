@@ -1,18 +1,20 @@
 
 class routeSegment:
-    'Object for holding the route from a source node to a current node'
-
-    def __init__(self,source,destination,route_string,miles,duration,highway_string):
-        self.source = source
+    'Object for holding the route between two nodes'
+    separator = '|'
+    source = ""
+    def __init__(self,destination,route_string,miles,duration,highway_string):
+        #self.source = source
         self.destination = destination
         self.route_string = route_string
         self.miles = miles
         self.duration = duration #in minutes
         self.highway_string = highway_string
+        self.level = len(self.route_string.split(self.separator)) - 1
 
     def machine_readable_stringify(self):
         #Prints the object in a machine readable format
-        print("%d %s %s" %(self.miles, self.format_minutes(),self.route_string))
+        print("%d %s %d %s" %(self.miles, self.format_minutes(),self.level,self.route_string))
 
     def format_minutes(self):
         minutes = self.duration

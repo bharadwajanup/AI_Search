@@ -25,17 +25,17 @@ def fetch_segments(sourceNode):
     rs_obj_list = []
     for segment in road_segments_list:
         if segment[0] == destination_city:
-            obj_src = segment[0]
+            obj_src = segment[0] #deprecated
             obj_des = segment[1]
         else:
             obj_src = segment[1]
             obj_des = segment[0]
 
-        route_string = sourceNode.route_string+","+obj_des
+        route_string = sourceNode.route_string+rs.separator+obj_des
         miles = sourceNode.miles + int(segment[2])
         duration = get_duration(miles,int(segment[3]))
-        highway_string = sourceNode.highway_string+","+segment[4]
-        rs_obj_list.append(rs(obj_src,obj_des,route_string,miles,duration,highway_string))
+        highway_string = sourceNode.highway_string+rs.separator+segment[4]
+        rs_obj_list.append(rs(obj_des,route_string,miles,duration,highway_string))
     return rs_obj_list
 
 
