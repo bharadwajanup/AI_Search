@@ -45,15 +45,36 @@ def change_position(board, move):
     board_copy[x][y] = 0
     return board_copy
 
+def change_position_back (state):
+    board = state[1]
+    move = state[2]
+    [x0, y0] = find_num(board, 0)
+    if move == 'D':
+        x = (x0+1)%4
+        y = y0
+    elif move == 'U':
+        x = (x0-1)%4
+        y = y0
+    elif move == 'R':
+        x = x0
+        y = (y0+1)%4
+    else:
+        x = x0
+        y = (y0-1)%4
+
+    board_copy = [[0] * 4 for i in range(4)]
+    for i in range(4):
+        for j in range(4):
+            board_copy[i][j] = board[i][j]
+    board_copy[x0][y0] = board[x][y]
+    board_copy[x][y] = 0
+    return board_copy
+
 def successors(state):
     s = state[1]
     currentCost = state[0] + 1 - heuristic(s)
     moveList = ['U', 'D', 'L', 'R']
     returnList = []
-
-    print "current route is " + str(currentCost-1)
-    print "heuristic is " + str(heuristic(s))
-
     for i in range(4):
         s_p = change_position(s, moveList[i])
         hCost = heuristic(s_p)
@@ -68,14 +89,27 @@ def solve15(initial_board):
         state = fringe.get()
         s = state[1]
         move = state[2]
-
-        print s
-
+        processed_states.append(state)
         if s == final_board:
             return (s)
         for state_p in successors(state):
            fringe.put(state_p)
     return False
+
+def find_route(states):
+    route = []
+    final_state = states.pop()
+    route.append(final_state[2])
+    temp_state = states.pop()
+    previous_board = change_position_back(temp_state)
+    while len(states) > 0:
+        if temp_state[1] == previous_board:
+            route.append(temp_state[2])
+            previous_board = change_position_back(temp_state)
+        else:
+            temp_state = states.pop()
+    route.reverse()
+    return route
 
 # Read in the initial board file
 f = open('input-board.txt', 'r')
@@ -97,6 +131,8 @@ for i in range(4):
         num += 1
 final_board[3][3] = 0
 
+processed_states = []
+route = []
 solution = solve15(initial_board)
 print solution
-#print_move()
+print find_route(processed_states)
