@@ -27,3 +27,7 @@ print()
 # Once it is done counting, I believe I should give it positions for each name so that they  can be separated from the relationships.
 # I am thinking about placing the first name (0,0) in the first place then let the program search for the name that is not used and not in the same line.
 #def function(name,line):
+# Various search functions can be applied just like n-queen problem..
+# Heuristic function for this one is by counting the number of lines, which will be the least number of tables.
+# Another possibility is that number of people in one line, which will also be the least number of tables needed.
+# Even if those two are combinbed, I think it is admissible.
