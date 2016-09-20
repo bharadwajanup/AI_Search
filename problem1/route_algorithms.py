@@ -1,5 +1,6 @@
 import problem1.fetch_route_data as rd
 from problem1.route_segment import routeSegment as rs
+import queue as Queue
 destination=""
 routing_option = ""
 source = ""
@@ -12,7 +13,7 @@ def matches_option(cur_node, prev_node):
             'scenic': False}#TODO: Work on Scenic
 
 def is_best_route(node_segment):
-    destination_city = node_segment.destination
+    destination_city = node_segment.destination.name
     if destination_city == source or destination_city in node_segment.route_string.rpartition(rs.separator)[0]:
         return False
     if goal_state != None and matches_option(goal_state,node_segment).get(routing_option,False):
@@ -39,7 +40,7 @@ def successors(node_segment,level=None):
 
 
 def is_goal(obj):
-    return obj.destination == destination
+    return obj.destination.name == destination
 
 
 def bfs(origin_node):
@@ -73,13 +74,9 @@ def dfs(origin_node,level=None):
                 s.machine_readable_stringify()
                 if goal_state == None or matches_option(s,goal_state).get(routing_option,False):
                     goal_state = s
-                #return s
             fringe.append(s)
     if goal_state == None:
         return False
-    # print("Routes Found")
-    # for route in all_goal_states:
-    #     route.machine_readable_stringify()
     return goal_state
 
 def ids(origin_node):
@@ -94,7 +91,7 @@ def ids(origin_node):
     return solution
 
 def ids_optim(origin_node):
-    if origin_node.destination == destination:
+    if origin_node.destination.name == destination:
         return origin_node
     depth = 1
 
@@ -115,3 +112,28 @@ def ids_optim(origin_node):
          #   return solution
         depth = depth+1
     return solution
+
+def hieuristic(nodeSegment):
+    return float(nodeSegment.miles + nodeSegment.est_distance)
+
+#TODO: Astar: For calculating the straight line distance, we can make use of the co-ordinates given in the city-gps.txt
+def astar(origin_node):
+    fringe = Queue.PriorityQueue()
+    fringe.put((hieuristic(origin_node),origin_node))
+    global goal_state
+    while not fringe.empty():
+        for s in successors(fringe.get()[1]):
+            if is_goal(s):
+                print("Route Found")
+                s.machine_readable_stringify()
+                if goal_state == None or matches_option(s, goal_state).get(routing_option, False):
+                    goal_state = s
+            try:
+                fringe.put((hieuristic(s),s))
+            except Exception:
+                #print("There was an exception at %s" %s.machine_readable_stringify())
+                print("There was an exception thrown")
+    if goal_state == None:
+        return False
+    return goal_state
+

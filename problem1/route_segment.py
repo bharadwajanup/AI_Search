@@ -1,8 +1,13 @@
 
+from math import radians, cos, sin, asin, sqrt
+import problem1.vincenty as vincenty
+
+
 class routeSegment:
     'Object for holding the route between two nodes'
     separator = '|'
     source = ""
+    goal = ""
     def __init__(self,destination,route_string,miles,duration,highway_string):
         #self.source = source
         self.destination = destination
@@ -11,6 +16,19 @@ class routeSegment:
         self.duration = duration #in minutes
         self.highway_string = highway_string
         self.level = len(self.route_string.split(self.separator)) - 1
+        self.est_distance = self.euclidean()#self.vincenty()#self.haversine()
+
+    def __eq__(self, other):
+        if other == None:
+            return False
+        return self.miles == other.miles
+
+    def __lt__(self, other):
+        if self.source.name == self.destination.name:
+            return False
+        elif other.source.name == other.destination.name:
+            return True
+        return self.miles < other.miles
 
     def machine_readable_stringify(self):
         #Prints the object in a machine readable format
@@ -28,5 +46,46 @@ class routeSegment:
 
     def human_readable_stringify(self):
         print("Print human readable solution")
+
+    def euclidean(self):
+        lat1 = self.goal.lat
+        lat2 = self.goal.lon
+        lon1 = self.destination.lat
+        lon2 = self.destination.lon
+        square_distance = (lat2 - lat1)**2 + (lon2 - lon1)**2
+        return sqrt(square_distance)
+    def haversine(self):
+        """
+        Calculate the great circle distance between two points
+        on the earth (specified in decimal degrees)
+        """
+        lat1 = self.goal.lat
+        lat2 = self.goal.lon
+        lon1 = self.destination.lat
+        lon2 = self.destination.lon
+        # convert decimal degrees to radians
+        lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+        # haversine formula
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+        a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+        c = 2 * asin(sqrt(a))
+        km = 6367 * c
+        return km
+
+    def vincenty(self):
+        lat1 = self.goal.lat
+        lat2 = self.goal.lon
+        lon1 = self.destination.lat
+        lon2 = self.destination.lon
+        return vincenty.vincenty((lat1,lon1),(lat2,lon2),True)
+
+
+class City:
+
+    def __init__(self,name,lat,lon):
+        self.name = name
+        self.lat = float(lat)
+        self.lon = float(lon)
 
 
