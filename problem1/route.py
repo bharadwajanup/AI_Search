@@ -1,6 +1,10 @@
 import sys
-import problem1.route_algorithms as ra
-from problem1.route_segment import routeSegment as rs
+try:
+    import problem1.route_algorithms as ra
+    from problem1.route_segment import routeSegment as rs
+except Exception:
+    import route_algorithms as ra
+    from route_segment import routeSegment as rs
 
 
 

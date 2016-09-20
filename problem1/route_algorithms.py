@@ -1,6 +1,11 @@
-import problem1.fetch_route_data as rd
-from problem1.route_segment import routeSegment as rs
-import queue as Queue
+try:
+    import problem1.fetch_route_data as rd
+    from problem1.route_segment import routeSegment as rs
+    import queue as Queue
+except Exception:
+    import fetch_route_data as rd
+    from route_segment import routeSegment as rs
+    import Queue
 destination=""
 routing_option = ""
 source = ""

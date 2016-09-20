@@ -1,5 +1,12 @@
-from problem1.route_segment import routeSegment as rs
-from problem1.route_segment import City
+try:
+
+    from problem1.route_segment import routeSegment as rs
+    from problem1.route_segment import City
+except Exception:
+    from route_segment import routeSegment as rs
+    from route_segment import City
+
+
 segments_data_file = "road-segments.txt"
 city_data_file = "city-gps.txt"
 segments_dict = {}

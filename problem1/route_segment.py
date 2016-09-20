@@ -1,6 +1,9 @@
 
 from math import radians, cos, sin, asin, sqrt
-import problem1.vincenty as vincenty
+try:
+    import problem1.vincenty as vincenty
+except Exception:
+    import vincenty as vincenty
 
 
 class routeSegment:
