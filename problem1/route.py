@@ -52,7 +52,7 @@ origin_node = rs(ra.rd.getCityObject(origin),origin,0,0,"")
 solution = routing_algorithm_implementations(routing_algorithm,origin_node)
 
 if solution:
-    print()
+    print("\n")
     print("Most Optimal Route:")
     solution.machine_readable_stringify()
 else:

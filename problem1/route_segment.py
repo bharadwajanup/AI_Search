@@ -19,6 +19,7 @@ class routeSegment:
         self.duration = duration #in minutes
         self.highway_string = highway_string
         self.level = len(self.route_string.split(self.separator)) - 1
+        #Change here to test with different heuristic implementations
         self.est_distance = self.euclidean()#self.vincenty()#self.haversine()
 
     def __eq__(self, other):
@@ -57,6 +58,8 @@ class routeSegment:
         lon2 = self.destination.lon
         square_distance = (lat2 - lat1)**2 + (lon2 - lon1)**2
         return sqrt(square_distance)
+	
+	#Source: http://stackoverflow.com/questions/4913349/haversine-formula-in-python-bearing-and-distance-between-two-gps-points
     def haversine(self):
         """
         Calculate the great circle distance between two points
@@ -75,7 +78,8 @@ class routeSegment:
         c = 2 * asin(sqrt(a))
         km = 6367 * c
         return km
-
+	#Vincenty distance formula implementation done by the library (source code uploaded along with the submission)
+	#Link : https://pypi.python.org/pypi/vincenty/0.1.4
     def vincenty(self):
         lat1 = self.goal.lat
         lat2 = self.goal.lon
