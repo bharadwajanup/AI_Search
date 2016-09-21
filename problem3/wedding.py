@@ -1,6 +1,6 @@
 # Assignment 1 - Question 3
 import sys
-print sys.argv
+#print sys.argv
 
 file_name = sys.argv[1]
 table_size = int(sys.argv[2])
