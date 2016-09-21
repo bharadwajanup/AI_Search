@@ -54,4 +54,4 @@ def start_assigning():
 
 solution = start_assigning()
 
-print(len(solution), solution)
+print len(solution), solution
