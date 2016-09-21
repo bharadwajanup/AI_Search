@@ -36,16 +36,16 @@ def start_assigning():
         is_seated = False
         for table in assign_list:
             can_be_seated = True
-            for seated_person in table:
-                if f_dict[seated_person].count(person) > 0:
-                    can_be_seated = False
+            if len(table) < table_size:
+                for seated_person in table:
+                    if f_dict[seated_person].count(person) > 0:
+                        can_be_seated = False
+                        break
+                if can_be_seated:
+                    table.append(person)
+                    is_seated = True
                     break
-            if can_be_seated and len(table)<table_size:
-                table.append(person)
-                is_seated = True
-                break
-            else:
-                is_seated = False
+            is_seated = False
         if not is_seated:
             assign_list.append([person])
 
