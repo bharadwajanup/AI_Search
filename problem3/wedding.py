@@ -1,34 +1,58 @@
-# Assignment 1 - Question 3
+file_name="myfriends.txt"
+table_size = 3
+f_dict = {}
 
-# I think it is simple.
-# Given the number of seats per table, it fills up the people at the table but the people in the same row cannot be sitted at the same table just like the queens problem.
-# The difference is that each name should be used once.
-# Moreover, every name should be used.
-# So, by putting the list of friends into the table, count the number of lines and the number of columns in each line.
-#
+def createFriendsDict():
+    dict={}
+    with open(file_name) as file:
+        for line in file:
+            list_of_friends = line.split()
+            if len(list_of_friends)==0:
+                continue
+            person = list_of_friends.pop(0)
+            if person not in dict:
+                dict[person] = list_of_friends
+            else:
+                dict[person]+=list_of_friends
+            for friend in list_of_friends:
+                if friend not in dict:
+                    dict[friend] = [person]
+                else:
+                    dict[friend].append(person)
+    return dict
 
-data = 'myfriends.txt'
-file = open(data, 'r')
-lines = file.readlines()
+f_dict = createFriendsDict()
 
-print 'read', len(lines), 'lines from', data
 
-# Number of rows in each line
-row = 0
-for i in range(0,len(lines)):
-    # I am not sure how to distinguish rows... How should i code to divide rows when the text is given with "space"
-    # So for i in range(0, len(lines)), if there is a space, it counts one and it should count for each line.
-    if
-    return count( [lines[col] for lines in data] )
+print(f_dict)
 
-print(len(lines))
-print()
 
-# Once it is done counting, I believe I should give it positions for each name so that they  can be separated from the relationships.
-# I am thinking about placing the first name (0,0) in the first place then let the program search for the name that is not used and not in the same line.
-#def function(name,line):
-# Various search functions can be applied just like n-queen problem. However, I believe it can be solved quite quickly by giving constraints that each name should be used once,
-# Only one name can be used for the same table in the same line, the number of people in the same table will be limited as well so when the table is filled without picking the names from the same line, it will move to the next table to fill up again. Then, it should have the least number of talbes.
-# Heuristic function for this one is by counting the number of lines, which will be the least number of tables.
-# Another possibility is that number of people in one line, which will also be the least number of tables needed.
-# Even if those two are combinbed, I think it is admissible.
+
+def start_assigning():
+    global f_dict
+
+    assign_list = []
+    for person in f_dict.keys():
+        is_seated = False
+        for table in assign_list:
+            can_be_seated = True
+            for seated_person in table:
+                if f_dict[seated_person].count(person) > 0:
+                    can_be_seated = False
+                    break
+            if can_be_seated and len(table)<table_size:
+                table.append(person)
+                is_seated = True
+                break
+            else:
+                is_seated = False
+        if not is_seated:
+            assign_list.append([person])
+
+    return assign_list
+
+
+
+solution = start_assigning()
+
+print(solution)
