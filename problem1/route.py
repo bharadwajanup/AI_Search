@@ -2,9 +2,11 @@ import sys
 try:
     import problem1.route_algorithms as ra
     from problem1.route_segment import routeSegment as rs
+    from problem1.route_segment import City as City
 except Exception:
     import route_algorithms as ra
     from route_segment import routeSegment as rs
+from problem1.route_segment import City as City
 
 
 
@@ -21,10 +23,12 @@ routing_algorithm = sys.argv[4]
 # #destination = "Indianapolis,_Indiana"
 # #destination = "Cincinnati,_Ohio"
 # destination = "Pittsburgh,_Pennsylvania"
-# destination = "Atlanta,_Georgia"
+# #destination = "Seattle,_Washington"
 # #destination = "sfsg"
-# routing_option="distance"
-# routing_algorithm="ids"
+# routing_option="scenic"
+# routing_algorithm="astar"
+
+
 
 def routing_algorithm_implementations(algorithm,origin_node):
     if algorithm == "bfs":
@@ -43,12 +47,12 @@ ra.destination = destination
 ra.routing_option = routing_option
 ra.source = origin
 
-rs.source = ra.rd.getCityObject(origin)
-rs.goal = ra.rd.getCityObject(destination)
+rs.source = City.getObj(origin)
+rs.goal = City.getObj(destination)
 if rs.source.lat == 0 or rs.goal.lat == 0:
     print("Invalid source or destination")
     exit(1)
-origin_node = rs(ra.rd.getCityObject(origin),origin,0,0,"")
+origin_node = rs(rs.source,origin,0,0,"",0)
 solution = routing_algorithm_implementations(routing_algorithm,origin_node)
 
 if solution:

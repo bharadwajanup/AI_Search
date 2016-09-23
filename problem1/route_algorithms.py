@@ -15,7 +15,7 @@ def matches_option(cur_node, prev_node):
     return {'segments': cur_node.level < prev_node.level,
             'distance': cur_node.miles < prev_node.miles,
             'time': cur_node.duration < prev_node.duration,
-            'scenic': False}#TODO: Work on Scenic
+            'scenic': cur_node.highway_count < prev_node.highway_count}
 
 def is_best_route(node_segment):
     destination_city = node_segment.destination.name
@@ -35,7 +35,7 @@ def successors(node_segment,level=None):
     successors_list = []
     if level != None and node_segment.level == level:
         return successors_list
-    child_objects = rd.fetch_segments(node_segment)
+    child_objects = rd.fetch_segments_new(node_segment)
 
     for rs_obj in child_objects:
         if is_best_route(rs_obj):
@@ -119,9 +119,9 @@ def ids_optim(origin_node):
     return solution
 
 def hieuristic(nodeSegment):
-    return float(nodeSegment.miles + nodeSegment.est_distance)
+    return float(nodeSegment.miles + nodeSegment.euclidean())
 
-#TODO: Astar: For calculating the straight line distance, we can make use of the co-ordinates given in the city-gps.txt
+
 def astar(origin_node):
     fringe = Queue.PriorityQueue()
     fringe.put((hieuristic(origin_node),origin_node))

@@ -11,16 +11,53 @@ class routeSegment:
     separator = '|'
     source = ""
     goal = ""
-    def __init__(self,destination,route_string,miles,duration,highway_string):
+    def __init__(self,destination,route_string,miles,duration,highway_string,highway_count):
         #self.source = source
         self.destination = destination
         self.route_string = route_string
         self.miles = miles
         self.duration = duration #in minutes
+        self.highway_count = highway_count
         self.highway_string = highway_string
         self.level = len(self.route_string.split(self.separator)) - 1
-        #Change here to test with different heuristic implementations
-        self.est_distance = self.euclidean()#self.vincenty()#self.haversine()
+
+
+    @classmethod
+    def from_file(cls,line,des_index):
+        parts = line.split()
+        if len(parts) != 5:
+            return None
+        des = City.getObj(parts[des_index])
+        r_str = parts[des_index]
+        mls = int(parts[2])
+        speed = int(parts[3])
+        duration = cls.get_duration(cls,mls,speed)
+        highway_count = 1 if speed>=55 else 0
+        hgwy_str = parts[4]
+        return cls(des,r_str,mls,duration,hgwy_str,highway_count)
+
+    def get_duration(self,distance,speed):
+        if speed == 0:
+            speed = 30
+        return float(60 * distance) / speed;
+
+    def __add__(self, other):
+        des = other.destination
+        r_str = self.route_string +routeSegment.separator+ other.route_string
+        mls = self.miles + other.miles
+        drtn = self.duration + other.duration
+        hgwy_str = self.highway_string +routeSegment.separator+ other.highway_string
+        highway_count = self.highway_count + other.highway_count
+        return routeSegment(des,r_str,mls,drtn,hgwy_str,highway_count)
+
+    def __radd__(self, other):
+        des = self.destination
+        r_str = other.route_string + routeSegment.separator+self.route_string
+        mls = other.miles + self.miles
+        drtn = other.duration + self.duration
+        hgwy_str = other.highway_string +routeSegment.separator+ self.highway_string
+        highway_count = self.highway_count + other.highway_count
+        return routeSegment(des, r_str, mls, drtn, hgwy_str,highway_count)
 
     def __eq__(self, other):
         if other == None:
@@ -38,15 +75,13 @@ class routeSegment:
         #Prints the object in a machine readable format
         print("%d %s %d %s" %(self.miles, self.format_minutes(),self.level,self.route_string))
 
+    def __str__(self):
+        #Prints the object in a machine readable format
+        print("%d %s %d %s" %(self.miles, self.format_minutes(),self.level,self.route_string))
+
     def format_minutes(self):
-        minutes = self.duration
-        if(minutes < 60):
-            return "%d minutes" %minutes
-        hours = minutes/60
-        minutes = hours % 60
-        if minutes == 0:
-            return "%d Hours" %(hours)
-        return "%d Hours, %d Minutes" %(hours,minutes)
+        time = round(float(self.duration)/60,4)
+        return str(time)
 
     def human_readable_stringify(self):
         print("Print human readable solution")
@@ -89,10 +124,32 @@ class routeSegment:
 
 
 class City:
-
+    city_list = {}
+    city_data_file = "city-gps.txt"
     def __init__(self,name,lat,lon):
         self.name = name
         self.lat = float(lat)
         self.lon = float(lon)
+    @classmethod
+    def city_from_file(cls,line):
+        parts = line.split()
+        if len(parts) == 3:
+            return cls(parts[0],parts[1],parts[2])
 
+
+    @classmethod
+    def getObj(cls, city):
+        if len(cls.city_list) == 0:
+            cls.initialize(cls)
+        if city not in cls.city_list:
+            cls.city_list[city] = cls(city,0,0)
+        return cls.city_list[city]
+
+    def initialize(self):
+        with open(self.city_data_file) as file:
+            for line in file:
+                parts = line.split()
+                if len(parts) == 3:
+                    city_name = parts[0]
+                    self.city_list[city_name] = City(city_name, parts[1], parts[2])
 
