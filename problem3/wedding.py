@@ -1,5 +1,9 @@
-file_name="myfriends.txt"
-table_size = 3
+# Assignment 1 - Question 3
+import sys
+#print sys.argv
+
+file_name = sys.argv[1]
+table_size = int(sys.argv[2])
 f_dict = {}
 
 def createFriendsDict():
@@ -23,14 +27,11 @@ def createFriendsDict():
 
 f_dict = createFriendsDict()
 
-
-print(f_dict)
-
-
+#print(f_dict)
 
 def start_assigning():
     global f_dict
-
+    
     assign_list = []
     for person in f_dict.keys():
         is_seated = False
@@ -51,8 +52,6 @@ def start_assigning():
 
     return assign_list
 
-
-
 solution = start_assigning()
 
-print(solution)
+print len(solution), solution
