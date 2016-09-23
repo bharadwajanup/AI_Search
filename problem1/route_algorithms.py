@@ -11,6 +11,7 @@ destination = ""
 routing_option = ""
 source = ""
 goal_state = None
+fringe_counter = 0
 
 # arbitrary max levels to return from the loop for IDS
 max_depth_level = 2000
@@ -54,6 +55,7 @@ def is_goal(obj):
 
 
 def bfs(origin_node):
+    global fringe_counter
     print("BFS")
     fringe = [origin_node]
     global goal_state
@@ -63,6 +65,7 @@ def bfs(origin_node):
                 if goal_state is None or matches_option(s, goal_state).get(routing_option, False):
                     goal_state = s
                     # return s
+            fringe_counter += 1
             fringe.insert(0, s)
     if goal_state is None:
         return False
@@ -70,6 +73,7 @@ def bfs(origin_node):
 
 
 def dfs(origin_node, level=None):
+    global fringe_counter
     fringe = [origin_node]
     global goal_state
     while len(fringe) > 0:
@@ -77,6 +81,7 @@ def dfs(origin_node, level=None):
             if is_goal(s):
                 if goal_state is None or matches_option(s, goal_state).get(routing_option, False):
                     goal_state = s
+            fringe_counter += 1
             fringe.append(s)
     if goal_state is None:
         return False
@@ -99,7 +104,7 @@ def ids_optim(origin_node):
     depth = 1
 
     while True:
-        print("Depth: %d" % depth)
+        # print("Depth: %d" % depth)
         if depth == 1:
             solution = dfs(origin_node, depth)
             depth += 1
@@ -121,6 +126,7 @@ def heuristics(node_segment):
 
 
 def a_star(origin_node):
+    global fringe_counter
     fringe = Queue.PriorityQueue()
     fringe.put((heuristics(origin_node), origin_node))
     global goal_state
@@ -130,6 +136,7 @@ def a_star(origin_node):
                 print("Route Found")
                 if goal_state == None or matches_option(s, goal_state).get(routing_option, False):
                     goal_state = s
+            fringe_counter += 1
             fringe.put((heuristics(s), s))
     if goal_state is None:
         return False

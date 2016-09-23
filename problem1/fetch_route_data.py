@@ -2,7 +2,7 @@ try:
 
     from problem1.route_segment import RouteNode
     from problem1.route_segment import City
-except Exception:
+except ImportError:
     from route_segment import RouteNode
     from route_segment import City
 

@@ -2,7 +2,7 @@ from math import radians, cos, sin, asin, sqrt
 
 try:
     import problem1.vincenty as vincenty
-except Exception:
+except ImportError:
     import vincenty as vincenty
 
 
@@ -173,3 +173,28 @@ class City:
                 if len(parts) == 3:
                     city_name = parts[0]
                     cls.city_list[city_name] = City(city_name, parts[1], parts[2])
+    #Estimate the farthest city
+    # @staticmethod
+    # def find_farthest_city_from_bloomington():
+    #     bloomington_obj = City.getObj("Bloomington,_Indiana")
+    #     max_distance_city = ""
+    #     max_distance = 0
+    #     for obj in City.city_list.values():
+    #         if obj.lat ==0 or obj.lon ==0:
+    #             continue
+    #         distance = City.euclidean(bloomington_obj,obj)
+    #
+    #         if distance > max_distance:
+    #             max_distance = distance
+    #             max_distance_city = str(obj)
+    #
+    #     return max_distance_city
+    #
+    # @staticmethod
+    # def euclidean(from_obj,to_obj):
+    #     lat1 = from_obj.lat
+    #     lat2 = to_obj.lat
+    #     lon1 = from_obj.lon
+    #     lon2 = to_obj.lon
+    #     square_distance = (lat2 - lat1) ** 2 + (lon2 - lon1) ** 2
+    #     return sqrt(square_distance)
