@@ -52,20 +52,15 @@ def bfs(origin_node):
     print("BFS")
     fringe = [origin_node]
     global goal_state
-    all_goal_states =[]
     while len(fringe)>0:
         for s in successors(fringe.pop()):
             if is_goal(s):
-                all_goal_states.append(s)
                 if goal_state == None or matches_option(s,goal_state).get(routing_option,False):
                     goal_state = s
                 #return s
             fringe.insert(0,s)
     if goal_state == None:
         return False
-    print("Routes Found")
-    for route in all_goal_states:
-        route.machine_readable_stringify()
     return goal_state
 
 def dfs(origin_node,level=None):
@@ -75,8 +70,6 @@ def dfs(origin_node,level=None):
     while len(fringe)>0:
         for s in successors(fringe.pop(),level):
             if is_goal(s):
-                print("Route Found")
-                s.machine_readable_stringify()
                 if goal_state == None or matches_option(s,goal_state).get(routing_option,False):
                     goal_state = s
             fringe.append(s)
@@ -130,7 +123,6 @@ def astar(origin_node):
         for s in successors(fringe.get()[1]):
             if is_goal(s):
                 print("Route Found")
-                s.machine_readable_stringify()
                 if goal_state == None or matches_option(s, goal_state).get(routing_option, False):
                     goal_state = s
             try:

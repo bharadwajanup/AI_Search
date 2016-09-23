@@ -58,7 +58,7 @@ solution = routing_algorithm_implementations(routing_algorithm,origin_node)
 if solution:
     print("\n")
     print("Most Optimal Route:")
-    solution.machine_readable_stringify()
+    print(solution)
 else:
     print ("Route could not be found")
 

@@ -71,20 +71,35 @@ class routeSegment:
             return True
         return self.miles < other.miles
 
-    def machine_readable_stringify(self):
-        #Prints the object in a machine readable format
-        print("%d %s %d %s" %(self.miles, self.format_minutes(),self.level,self.route_string))
+    def human_readable_time(self):
+        minutes = self.duration
+        if (minutes < 60):
+            return "%d minutes" % minutes
+        hours = minutes / 60
+        minutes = hours % 60
+        if minutes == 0:
+            return "%d Hours" % (hours)
+        return "%d Hours, %d Minutes" % (hours, minutes)
 
     def __str__(self):
         #Prints the object in a machine readable format
-        print("%d %s %d %s" %(self.miles, self.format_minutes(),self.level,self.route_string))
+
+        return self.human_readable_stringify()+"\n"+"%d %s %s" %(self.miles, self.format_minutes(),self.route_string.replace('|',' '))
 
     def format_minutes(self):
         time = round(float(self.duration)/60,4)
         return str(time)
 
     def human_readable_stringify(self):
-        print("Print human readable solution")
+        str = "Total Distance: %d miles\n" % (self.miles)
+        str += "Time: %s\n" % (self.human_readable_time())
+        str+="Start from %s\n" %(self.source.name)
+        places = self.route_string.split(routeSegment.separator)
+        highways = self.highway_string.split(routeSegment.separator)
+
+        for i in range(0,len(places)):
+            str+="Take %s to reach %s\n" %(highways[i],places[i])
+        return str
 
     def euclidean(self):
         lat1 = self.goal.lat
