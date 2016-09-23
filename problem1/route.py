@@ -6,7 +6,7 @@ try:
 except Exception:
     import route_algorithms as ra
     from route_segment import routeSegment as rs
-from problem1.route_segment import City as City
+    from route_segment import City as City
 
 
 

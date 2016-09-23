@@ -31,11 +31,12 @@ class routeSegment:
         r_str = parts[des_index]
         mls = int(parts[2])
         speed = int(parts[3])
-        duration = cls.get_duration(cls,mls,speed)
+        duration = cls.get_duration(mls,speed)
         highway_count = 1 if speed>=55 else 0
         hgwy_str = parts[4]
         return cls(des,r_str,mls,duration,hgwy_str,highway_count)
 
+    @classmethod
     def get_duration(self,distance,speed):
         if speed == 0:
             speed = 30
@@ -97,7 +98,7 @@ class routeSegment:
         places = self.route_string.split(routeSegment.separator)
         highways = self.highway_string.split(routeSegment.separator)
 
-        for i in range(0,len(places)):
+        for i in range(1,len(places)):
             str+="Take %s to reach %s\n" %(highways[i],places[i])
         return str
 
@@ -155,11 +156,11 @@ class City:
     @classmethod
     def getObj(cls, city):
         if len(cls.city_list) == 0:
-            cls.initialize(cls)
+            cls.initialize()
         if city not in cls.city_list:
             cls.city_list[city] = cls(city,0,0)
         return cls.city_list[city]
-
+    @classmethod
     def initialize(self):
         with open(self.city_data_file) as file:
             for line in file:
